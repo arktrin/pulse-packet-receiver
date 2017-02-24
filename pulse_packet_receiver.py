@@ -3,7 +3,7 @@
 import numpy as np
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
-from template_packet_receive import Ui_Form
+from template_packet_receiver import Ui_Form
 from threading import Thread
 import socket, struct, Queue
 
