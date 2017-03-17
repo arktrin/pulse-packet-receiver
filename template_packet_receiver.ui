@@ -6,21 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1042</width>
-    <height>860</height>
+    <width>838</width>
+    <height>757</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="2">
-    <widget class="QCheckBox" name="randCheck">
-     <property name="text">
-      <string>Randomize</string>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0" colspan="4">
     <widget class="PlotWidget" name="plot">
      <property name="sizePolicy">
@@ -31,45 +24,31 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0">
+   <item row="1" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Size</string>
+      <string>Window size</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="1" column="2">
+    <widget class="QCheckBox" name="pixelModeCheck">
+     <property name="text">
+      <string>test</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
     <widget class="QSpinBox" name="sizeSpin">
      <property name="value">
       <number>10</number>
      </property>
     </widget>
    </item>
-   <item row="2" column="3">
-    <widget class="QCheckBox" name="pixelModeCheck">
+   <item row="1" column="3">
+    <widget class="QPushButton" name="saveDataBtn">
      <property name="text">
-      <string>pixel mode</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QPushButton" name="startAverBtn">
-     <property name="text">
-      <string>Start average</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QPushButton" name="stopAverBtn">
-     <property name="text">
-      <string>Stop average</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2">
-    <widget class="QPushButton" name="resetAverBtn">
-     <property name="text">
-      <string>Reset avarage</string>
+      <string>Save data</string>
      </property>
     </widget>
    </item>

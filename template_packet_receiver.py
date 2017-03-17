@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'template_packet_receive.ui'
+# Form implementation generated from reading ui file 'template_packet_receiver.ui'
 #
-# Created: Wed Feb 22 14:54:40 2017
-#      by: PyQt4 UI code generator 4.10.4
+# Created by: PyQt4 UI code generator 4.11.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -26,12 +25,9 @@ except AttributeError:
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(1042, 860)
+        Form.resize(838, 757)
         self.gridLayout = QtGui.QGridLayout(Form)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
-        self.randCheck = QtGui.QCheckBox(Form)
-        self.randCheck.setObjectName(_fromUtf8("randCheck"))
-        self.gridLayout.addWidget(self.randCheck, 2, 2, 1, 1)
         self.plot = PlotWidget(Form)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -42,34 +38,25 @@ class Ui_Form(object):
         self.gridLayout.addWidget(self.plot, 0, 0, 1, 4)
         self.label = QtGui.QLabel(Form)
         self.label.setObjectName(_fromUtf8("label"))
-        self.gridLayout.addWidget(self.label, 2, 0, 1, 1)
+        self.gridLayout.addWidget(self.label, 1, 0, 1, 1)
+        self.pixelModeCheck = QtGui.QCheckBox(Form)
+        self.pixelModeCheck.setObjectName(_fromUtf8("pixelModeCheck"))
+        self.gridLayout.addWidget(self.pixelModeCheck, 1, 2, 1, 1)
         self.sizeSpin = QtGui.QSpinBox(Form)
         self.sizeSpin.setProperty("value", 10)
         self.sizeSpin.setObjectName(_fromUtf8("sizeSpin"))
-        self.gridLayout.addWidget(self.sizeSpin, 2, 1, 1, 1)
-        self.pixelModeCheck = QtGui.QCheckBox(Form)
-        self.pixelModeCheck.setObjectName(_fromUtf8("pixelModeCheck"))
-        self.gridLayout.addWidget(self.pixelModeCheck, 2, 3, 1, 1)
-        self.startAverBtn = QtGui.QPushButton(Form)
-        self.startAverBtn.setObjectName(_fromUtf8("startAverBtn"))
-        self.gridLayout.addWidget(self.startAverBtn, 1, 0, 1, 1)
-        self.stopAverBtn = QtGui.QPushButton(Form)
-        self.stopAverBtn.setObjectName(_fromUtf8("stopAverBtn"))
-        self.gridLayout.addWidget(self.stopAverBtn, 1, 1, 1, 1)
-        self.resetAverBtn = QtGui.QPushButton(Form)
-        self.resetAverBtn.setObjectName(_fromUtf8("resetAverBtn"))
-        self.gridLayout.addWidget(self.resetAverBtn, 1, 2, 1, 1)
+        self.gridLayout.addWidget(self.sizeSpin, 1, 1, 1, 1)
+        self.saveDataBtn = QtGui.QPushButton(Form)
+        self.saveDataBtn.setObjectName(_fromUtf8("saveDataBtn"))
+        self.gridLayout.addWidget(self.saveDataBtn, 1, 3, 1, 1)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
-        self.randCheck.setText(_translate("Form", "Randomize", None))
-        self.label.setText(_translate("Form", "Size", None))
-        self.pixelModeCheck.setText(_translate("Form", "pixel mode", None))
-        self.startAverBtn.setText(_translate("Form", "Start average", None))
-        self.stopAverBtn.setText(_translate("Form", "Stop average", None))
-        self.resetAverBtn.setText(_translate("Form", "Reset avarage", None))
+        self.label.setText(_translate("Form", "Window size", None))
+        self.pixelModeCheck.setText(_translate("Form", "test", None))
+        self.saveDataBtn.setText(_translate("Form", "Save data", None))
 
 from pyqtgraph import PlotWidget

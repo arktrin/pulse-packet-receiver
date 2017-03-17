@@ -31,7 +31,7 @@ class QtPlotter:
 		# self.ui_plot.setRange(xRange=[-100, 100], yRange=[0, 2100])
 		self.ui_plot.showGrid(x=True, y=True)
 
-		self.ui.startAverBtn.clicked.connect(self.start_average)
+		self.ui.saveDataBtn.clicked.connect(self.save_data)
 
 		self.point_num = 0
 		self.data = np.zeros(100000)
@@ -46,7 +46,7 @@ class QtPlotter:
 		self.ports.append((q, plt))
 		return q
 
-	def start_average(self):
+	def save_data(self):
 		print 'Hey!'
 
 	def update(self):
