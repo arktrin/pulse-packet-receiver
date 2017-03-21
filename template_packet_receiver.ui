@@ -14,6 +14,13 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="1">
+    <widget class="QPushButton" name="thresholdWriteBtn">
+     <property name="text">
+      <string>Write threshold value</string>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="0" colspan="4">
     <widget class="PlotWidget" name="plot">
      <property name="sizePolicy">
@@ -24,13 +31,6 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Window size</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="2">
     <widget class="QCheckBox" name="pixelModeCheck">
      <property name="text">
@@ -38,17 +38,66 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="QSpinBox" name="sizeSpin">
+   <item row="1" column="3">
+    <widget class="QPushButton" name="saveDataBtn">
+     <property name="text">
+      <string>Save data</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QSpinBox" name="thresholdValueSpinTest">
+     <property name="maximum">
+      <number>65535</number>
+     </property>
+     <property name="singleStep">
+      <number>1</number>
+     </property>
      <property name="value">
       <number>10</number>
      </property>
     </widget>
    </item>
-   <item row="1" column="3">
-    <widget class="QPushButton" name="saveDataBtn">
+   <item row="1" column="0">
+    <widget class="QDoubleSpinBox" name="thresholdValueSpin">
+     <property name="decimals">
+      <number>3</number>
+     </property>
+     <property name="maximum">
+      <double>2.500000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.001000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.100000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="3">
+    <widget class="QPushButton" name="pushButton">
      <property name="text">
-      <string>Save data</string>
+      <string>PushButton</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>window length to average</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QSpinBox" name="windowLenSpin">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>16</number>
+     </property>
+     <property name="value">
+      <number>1</number>
      </property>
     </widget>
    </item>

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import numpy as np
+import scipy.signal as ss
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
 from template_packet_receiver import Ui_Form
@@ -15,50 +16,69 @@ count = 0
 num_points = 0
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 sock.bind((host, port))
 
 class QtPlotter:
+    def __init__(self):
+        self.ports = []
+        self.timer = pg.QtCore.QTimer()
+        self.app = QtGui.QApplication([])
+        self.win = QtGui.QWidget()
+        self.ui = Ui_Form()
+        self.ui.setupUi(self.win)
+        self.win.show()
+        self.ui_plot = self.ui.plot
+        # self.ui_plot.setRange(xRange=[-100, 100], yRange=[0, 2100])
+        self.ui_plot.showGrid(x=True, y=True)
+        self.ui.saveDataBtn.clicked.connect(self.save_data)
+        self.ui.thresholdWriteBtn.clicked.connect(self.write_to_DAC)
+        self.point_num = 0
+        self.max_num_points = 50000
+        self.raw_data = np.zeros(self.max_num_points)
+        self.sum_data = np.zeros((self.max_num_points, 16))
+        self.timer.timeout.connect(self.update)
+        self.timer.start(0)
+        # self.ui_plot.setAspectLocked(True)
 
-	def __init__(self):
-		self.ports = []
-		self.timer = pg.QtCore.QTimer()
-		self.app = QtGui.QApplication([])
-		self.win = QtGui.QWidget()
-		self.ui = Ui_Form()
-		self.ui.setupUi(self.win)
-		self.win.show()
-		self.ui_plot = self.ui.plot
-		# self.ui_plot.setRange(xRange=[-100, 100], yRange=[0, 2100])
-		self.ui_plot.showGrid(x=True, y=True)
+    def getPort(self):
+        q = Queue.Queue()
+        plt = self.ui_plot.plot() # pen='g'
+        self.ports.append((q, plt))
+        return q
 
-		self.ui.saveDataBtn.clicked.connect(self.save_data)
+    def write_to_DAC(self):
+        value = self.ui.thresholdValueSpinTest.value()
+        value = value << 4
+        packet = list(struct.unpack('4B', struct.pack('>I', value)))
+        packet.pop(0)
+        print packet
+        packet[0] += 48
+        print packet
+        pack_values = [255, 170] + packet + 31*[0]
+        packer = struct.Struct(len(pack_values)*'B')
+        packed_data = packer.pack(*pack_values)
+        sock.sendto(packed_data, ('192.168.2.255', port))
 
-		self.point_num = 0
-		self.data = np.zeros(100000)
+    def save_data(self):
+        print 'Hey!'
 
-		self.timer.timeout.connect(self.update)
-		self.timer.start(0)
-		# self.ui_plot.setAspectLocked(True)
-
-	def getPort(self):
-		q = Queue.Queue()
-		plt = self.ui_plot.plot() # pen='g'
-		self.ports.append((q, plt))
-		return q
-
-	def save_data(self):
-		print 'Hey!'
-
-	def update(self):
-		for q, plt in self.ports:
-			try:
-				self.data[self.point_num] = q.get(block=False)
+    def update(self):
+        for q, plt in self.ports:
+            try:
+                self.raw_data[self.point_num+16] = q.get(block=False)
+                for i in xrange(16):
+                    # index_begin = self.max_num_points-i-self.point_num
+                    # index_end = self.max_num_points-self.point_num
+                    self.sum_data[self.point_num, i] = np.sum(self.raw_data[self.point_num-i+16:self.point_num+17])
+                # window = ss.boxcar(self.ui.windowLenSpin.value())
+                # data_conv = ss.convolve(self.data[:self.point_num+1], window, mode='same')
 				# y,x = np.histogram(data, bins=np.linspace(-100,100,200))
 				# plt.clear()
-				self.point_num += 1
-				plt.setData(self.data[:self.point_num], pen='g')
-			except Queue.Empty:
-				pass
+                self.point_num += 1
+                plt.setData(self.sum_data[:self.point_num+1, self.ui.windowLenSpin.value()-1], pen='g')
+            except Queue.Empty:
+                pass
 
 def qtLoop():
 	import sys
