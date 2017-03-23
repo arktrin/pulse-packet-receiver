@@ -2,12 +2,13 @@
 
 # Form implementation generated from reading ui file 'template_packet_receiver.ui'
 #
-# Created: Tue Mar 21 20:20:53 2017
+# Created: Thu Mar 23 15:00:18 2017
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
+from timeaxisitem_class import TimeAxisItem
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -32,26 +33,17 @@ class Ui_Form(object):
         self.thresholdWriteBtn = QtGui.QPushButton(Form)
         self.thresholdWriteBtn.setObjectName(_fromUtf8("thresholdWriteBtn"))
         self.gridLayout.addWidget(self.thresholdWriteBtn, 1, 1, 1, 1)
-        self.plot = PlotWidget(Form)
+        self.plot = PlotWidget(Form, axisItems={'bottom': TimeAxisItem(orientation='bottom')})
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.plot.sizePolicy().hasHeightForWidth())
         self.plot.setSizePolicy(sizePolicy)
         self.plot.setObjectName(_fromUtf8("plot"))
-        self.gridLayout.addWidget(self.plot, 0, 0, 1, 4)
-        self.pixelModeCheck = QtGui.QCheckBox(Form)
-        self.pixelModeCheck.setObjectName(_fromUtf8("pixelModeCheck"))
-        self.gridLayout.addWidget(self.pixelModeCheck, 1, 2, 1, 1)
+        self.gridLayout.addWidget(self.plot, 0, 0, 1, 5)
         self.saveDataBtn = QtGui.QPushButton(Form)
         self.saveDataBtn.setObjectName(_fromUtf8("saveDataBtn"))
-        self.gridLayout.addWidget(self.saveDataBtn, 1, 3, 1, 1)
-        self.thresholdValueSpinTest = QtGui.QSpinBox(Form)
-        self.thresholdValueSpinTest.setMaximum(65535)
-        self.thresholdValueSpinTest.setSingleStep(1)
-        self.thresholdValueSpinTest.setProperty("value", 10)
-        self.thresholdValueSpinTest.setObjectName(_fromUtf8("thresholdValueSpinTest"))
-        self.gridLayout.addWidget(self.thresholdValueSpinTest, 3, 1, 1, 1)
+        self.gridLayout.addWidget(self.saveDataBtn, 1, 4, 1, 1)
         self.thresholdValueSpin = QtGui.QDoubleSpinBox(Form)
         self.thresholdValueSpin.setDecimals(3)
         self.thresholdValueSpin.setMaximum(2.5)
@@ -59,9 +51,6 @@ class Ui_Form(object):
         self.thresholdValueSpin.setProperty("value", 0.1)
         self.thresholdValueSpin.setObjectName(_fromUtf8("thresholdValueSpin"))
         self.gridLayout.addWidget(self.thresholdValueSpin, 1, 0, 1, 1)
-        self.pushButton = QtGui.QPushButton(Form)
-        self.pushButton.setObjectName(_fromUtf8("pushButton"))
-        self.gridLayout.addWidget(self.pushButton, 4, 3, 1, 1)
         self.label = QtGui.QLabel(Form)
         self.label.setObjectName(_fromUtf8("label"))
         self.gridLayout.addWidget(self.label, 4, 0, 1, 1)
@@ -71,6 +60,16 @@ class Ui_Form(object):
         self.windowLenSpin.setProperty("value", 1)
         self.windowLenSpin.setObjectName(_fromUtf8("windowLenSpin"))
         self.gridLayout.addWidget(self.windowLenSpin, 4, 1, 1, 1)
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem, 1, 3, 1, 1)
+        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem1, 1, 2, 1, 1)
+        self.thresholdValueSpinTest = QtGui.QSpinBox(Form)
+        self.thresholdValueSpinTest.setMaximum(65535)
+        self.thresholdValueSpinTest.setSingleStep(1)
+        self.thresholdValueSpinTest.setProperty("value", 10)
+        self.thresholdValueSpinTest.setObjectName(_fromUtf8("thresholdValueSpinTest"))
+        self.gridLayout.addWidget(self.thresholdValueSpinTest, 2, 0, 1, 1)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -78,9 +77,7 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
         self.thresholdWriteBtn.setText(_translate("Form", "Write threshold value", None))
-        self.pixelModeCheck.setText(_translate("Form", "test", None))
         self.saveDataBtn.setText(_translate("Form", "Save data", None))
-        self.pushButton.setText(_translate("Form", "PushButton", None))
         self.label.setText(_translate("Form", "window length to average", None))
 
 from pyqtgraph import PlotWidget

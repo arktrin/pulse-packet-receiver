@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
 import numpy as np
-import scipy.signal as ss
+# import scipy.signal as ss
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
 from template_packet_receiver import Ui_Form
 from threading import Thread
-import socket, struct, Queue
+import socket, struct, Queue, datetime
 
 host = '192.168.2.103'
 port = 50987
@@ -18,6 +18,11 @@ num_points = 0
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 sock.bind((host, port))
+
+UNIX_EPOCH = datetime.datetime(1970, 1, 1, 0, 0)
+
+def now_timestamp(epoch=UNIX_EPOCH):
+    return(int((datetime.datetime.utcnow() - epoch).total_seconds()*1e6))
 
 class QtPlotter:
     def __init__(self):
@@ -35,6 +40,7 @@ class QtPlotter:
         self.ui.thresholdWriteBtn.clicked.connect(self.write_to_DAC)
         self.point_num = 0
         self.max_num_points = 50000
+        self.data_x = []
         self.raw_data = np.zeros(self.max_num_points)
         self.sum_data = np.zeros((self.max_num_points, 16))
         self.timer.timeout.connect(self.update)
@@ -68,15 +74,13 @@ class QtPlotter:
             try:
                 self.raw_data[self.point_num+16] = q.get(block=False)
                 for i in xrange(16):
-                    # index_begin = self.max_num_points-i-self.point_num
-                    # index_end = self.max_num_points-self.point_num
                     self.sum_data[self.point_num, i] = np.sum(self.raw_data[self.point_num-i+16:self.point_num+17])
-                # window = ss.boxcar(self.ui.windowLenSpin.value())
-                # data_conv = ss.convolve(self.data[:self.point_num+1], window, mode='same')
 				# y,x = np.histogram(data, bins=np.linspace(-100,100,200))
 				# plt.clear()
+                x = now_timestamp()
+                self.data_x.append(x)
                 self.point_num += 1
-                plt.setData(self.sum_data[:self.point_num+1, self.ui.windowLenSpin.value()-1], pen='g')
+                plt.setData(self.data_x, self.sum_data[:self.point_num, self.ui.windowLenSpin.value()-1], pen='g')
             except Queue.Empty:
                 pass
 
