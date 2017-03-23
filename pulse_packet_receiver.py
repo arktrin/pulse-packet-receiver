@@ -54,13 +54,13 @@ class QtPlotter:
         return q
 
     def write_to_DAC(self):
-        value = self.ui.thresholdValueSpinTest.value()
+        raw_value = self.ui.thresholdValueSpin.value()
+        value = (2**16-1)*raw_value/2500
         value = value << 4
         packet = list(struct.unpack('4B', struct.pack('>I', value)))
         packet.pop(0)
-        print packet
+        # print packet
         packet[0] += 48
-        print packet
         pack_values = [255, 170] + packet + 31*[0]
         packer = struct.Struct(len(pack_values)*'B')
         packed_data = packer.pack(*pack_values)

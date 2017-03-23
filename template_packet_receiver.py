@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'template_packet_receiver.ui'
 #
-# Created: Thu Mar 23 15:00:18 2017
+# Created: Thu Mar 23 17:53:18 2017
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -30,6 +30,8 @@ class Ui_Form(object):
         Form.resize(838, 757)
         self.gridLayout = QtGui.QGridLayout(Form)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem, 2, 1, 1, 1)
         self.thresholdWriteBtn = QtGui.QPushButton(Form)
         self.thresholdWriteBtn.setObjectName(_fromUtf8("thresholdWriteBtn"))
         self.gridLayout.addWidget(self.thresholdWriteBtn, 1, 1, 1, 1)
@@ -41,16 +43,6 @@ class Ui_Form(object):
         self.plot.setSizePolicy(sizePolicy)
         self.plot.setObjectName(_fromUtf8("plot"))
         self.gridLayout.addWidget(self.plot, 0, 0, 1, 5)
-        self.saveDataBtn = QtGui.QPushButton(Form)
-        self.saveDataBtn.setObjectName(_fromUtf8("saveDataBtn"))
-        self.gridLayout.addWidget(self.saveDataBtn, 1, 4, 1, 1)
-        self.thresholdValueSpin = QtGui.QDoubleSpinBox(Form)
-        self.thresholdValueSpin.setDecimals(3)
-        self.thresholdValueSpin.setMaximum(2.5)
-        self.thresholdValueSpin.setSingleStep(0.001)
-        self.thresholdValueSpin.setProperty("value", 0.1)
-        self.thresholdValueSpin.setObjectName(_fromUtf8("thresholdValueSpin"))
-        self.gridLayout.addWidget(self.thresholdValueSpin, 1, 0, 1, 1)
         self.label = QtGui.QLabel(Form)
         self.label.setObjectName(_fromUtf8("label"))
         self.gridLayout.addWidget(self.label, 4, 0, 1, 1)
@@ -60,16 +52,19 @@ class Ui_Form(object):
         self.windowLenSpin.setProperty("value", 1)
         self.windowLenSpin.setObjectName(_fromUtf8("windowLenSpin"))
         self.gridLayout.addWidget(self.windowLenSpin, 4, 1, 1, 1)
-        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem, 1, 3, 1, 1)
+        self.thresholdValueSpin = QtGui.QSpinBox(Form)
+        self.thresholdValueSpin.setMaximum(2500)
+        self.thresholdValueSpin.setSingleStep(1)
+        self.thresholdValueSpin.setProperty("value", 0)
+        self.thresholdValueSpin.setObjectName(_fromUtf8("thresholdValueSpin"))
+        self.gridLayout.addWidget(self.thresholdValueSpin, 1, 0, 1, 1)
         spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.gridLayout.addItem(spacerItem1, 1, 2, 1, 1)
-        self.thresholdValueSpinTest = QtGui.QSpinBox(Form)
-        self.thresholdValueSpinTest.setMaximum(65535)
-        self.thresholdValueSpinTest.setSingleStep(1)
-        self.thresholdValueSpinTest.setProperty("value", 10)
-        self.thresholdValueSpinTest.setObjectName(_fromUtf8("thresholdValueSpinTest"))
-        self.gridLayout.addWidget(self.thresholdValueSpinTest, 2, 0, 1, 1)
+        spacerItem2 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem2, 1, 3, 1, 1)
+        self.saveDataBtn = QtGui.QPushButton(Form)
+        self.saveDataBtn.setObjectName(_fromUtf8("saveDataBtn"))
+        self.gridLayout.addWidget(self.saveDataBtn, 1, 4, 1, 1)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -77,7 +72,8 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
         self.thresholdWriteBtn.setText(_translate("Form", "Write threshold value", None))
-        self.saveDataBtn.setText(_translate("Form", "Save data", None))
         self.label.setText(_translate("Form", "window length to average", None))
+        self.thresholdValueSpin.setSuffix(_translate("Form", " mV", None))
+        self.saveDataBtn.setText(_translate("Form", "Save data", None))
 
 from pyqtgraph import PlotWidget
