@@ -2,8 +2,7 @@
 
 # Form implementation generated from reading ui file 'template_packet_receiver.ui'
 #
-# Created: Thu Mar 23 17:53:18 2017
-#      by: PyQt4 UI code generator 4.10.4
+# Created by: PyQt4 UI code generator 4.11.4
 #
 # WARNING! All changes made in this file will be lost!
 
