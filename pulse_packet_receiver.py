@@ -8,7 +8,7 @@ from template_packet_receiver import Ui_Form
 from threading import Thread
 import socket, struct, Queue, datetime
 
-host = '192.168.2.103'
+host = ''
 port = 50987
 data = np.zeros(100000)
 pack_struct = '!' + 36*'B' + 2*'I'
@@ -22,67 +22,73 @@ sock.bind((host, port))
 UNIX_EPOCH = datetime.datetime(1970, 1, 1, 0, 0)
 
 def now_timestamp(epoch=UNIX_EPOCH):
-    return(int((datetime.datetime.utcnow() - epoch).total_seconds()*1e6))
+	return(int((datetime.datetime.now() - epoch).total_seconds()*1e6))
 
 class QtPlotter:
-    def __init__(self):
-        self.ports = []
-        self.timer = pg.QtCore.QTimer()
-        self.app = QtGui.QApplication([])
-        self.win = QtGui.QWidget()
-        self.ui = Ui_Form()
-        self.ui.setupUi(self.win)
-        self.win.show()
-        self.ui_plot = self.ui.plot
-        # self.ui_plot.setRange(xRange=[-100, 100], yRange=[0, 2100])
-        self.ui_plot.showGrid(x=True, y=True)
-        self.ui.saveDataBtn.clicked.connect(self.save_data)
-        self.ui.thresholdWriteBtn.clicked.connect(self.write_to_DAC)
-        self.point_num = 0
-        self.max_num_points = 50000
-        self.data_x = []
-        self.raw_data = np.zeros(self.max_num_points)
-        self.sum_data = np.zeros((self.max_num_points, 16))
-        self.timer.timeout.connect(self.update)
-        self.timer.start(0)
-        # self.ui_plot.setAspectLocked(True)
+	def __init__(self):
+		self.ports = []
+		self.timer = pg.QtCore.QTimer()
+		self.app = QtGui.QApplication([])
+		self.win = QtGui.QWidget()
+		self.ui = Ui_Form()
+		self.ui.setupUi(self.win)
+		self.win.setWindowTitle('live pulse counter')
+		self.win.show()
+		self.ui_plot = self.ui.plot
+		# self.ui_plot.setRange(xRange=[-100, 100], yRange=[0, 2100])
+		self.ui_plot.showGrid(x=True, y=True)
+		self.ui_plot.setTitle('start time '+datetime.datetime.now().strftime("%d.%m.%y %H:%M:%S"))
+		self.ui.saveDataBtn.clicked.connect(self.save_data)
+		self.ui.thresholdWriteBtn.clicked.connect(self.write_to_DAC)
+		self.point_num = 0
+		self.max_num_points = 50000
+		self.data_x = []
+		self.raw_data = np.zeros(self.max_num_points)
+		self.sum_data = np.zeros((self.max_num_points, 16))
+		self.start_time = now_timestamp()
+		self.timer.timeout.connect(self.update)
+		self.timer.start(0)
+		# self.ui_plot.setAspectLocked(True)
 
-    def getPort(self):
-        q = Queue.Queue()
-        plt = self.ui_plot.plot() # pen='g'
-        self.ports.append((q, plt))
-        return q
+	def getPort(self):
+		q = Queue.Queue()
+		plt = self.ui_plot.plot() # pen='g'
+		self.ports.append((q, plt))
+		return q
 
-    def write_to_DAC(self):
-        raw_value = self.ui.thresholdValueSpin.value()
-        value = (2**16-1)*raw_value/2500
-        value = value << 4
-        packet = list(struct.unpack('4B', struct.pack('>I', value)))
-        packet.pop(0)
-        # print packet
-        packet[0] += 48
-        pack_values = [255, 170] + packet + 31*[0]
-        packer = struct.Struct(len(pack_values)*'B')
-        packed_data = packer.pack(*pack_values)
-        sock.sendto(packed_data, ('192.168.2.255', port))
+	def write_to_DAC(self):
+		raw_value = self.ui.thresholdValueSpin.value()
+		value = (2**16-1)*raw_value/2500
+		value = value << 4
+		packet = list(struct.unpack('4B', struct.pack('>I', value)))
+		packet.pop(0)
+		# print packet
+		packet[0] += 48
+		pack_values = [255, 170] + packet + 31*[0]
+		packer = struct.Struct(len(pack_values)*'B')
+		packed_data = packer.pack(*pack_values)
+		sock.sendto(packed_data, ('192.168.2.255', port))
 
-    def save_data(self):
-        print 'Hey!'
+	def save_data(self):
+		self.end_time = now_timestamp()
+		start_end_time = np.array([self.start_time, self.end_time])
+		start_time_str = datetime.datetime.utcfromtimestamp(float(self.start_time)/1e6).strftime("%d.%m.%y_%H-%M-%S")
+		np.savez('saved_data/'+start_time_str+'.npz', time=start_end_time, count=self.raw_data[16:])
 
-    def update(self):
-        for q, plt in self.ports:
-            try:
-                self.raw_data[self.point_num+16] = q.get(block=False)
-                for i in xrange(16):
-                    self.sum_data[self.point_num, i] = np.sum(self.raw_data[self.point_num-i+16:self.point_num+17])
+	def update(self):
+		for q, plt in self.ports:
+			try:
+				self.raw_data[self.point_num+16] = q.get(block=False)
+				for i in xrange(16):
+					self.sum_data[self.point_num, i] = np.sum(self.raw_data[self.point_num-i+16:self.point_num+17])
 				# y,x = np.histogram(data, bins=np.linspace(-100,100,200))
 				# plt.clear()
-                x = now_timestamp()
-                self.data_x.append(x)
-                self.point_num += 1
-                plt.setData(self.data_x, self.sum_data[:self.point_num, self.ui.windowLenSpin.value()-1], pen='g')
-            except Queue.Empty:
-                pass
+				x = now_timestamp()
+				self.data_x.append(x)
+				self.point_num += 1
+				plt.setData(self.data_x, self.sum_data[:self.point_num, self.ui.windowLenSpin.value()-1], pen='g')
+			except Queue.Empty:
+				pass
 
 def qtLoop():
 	import sys
