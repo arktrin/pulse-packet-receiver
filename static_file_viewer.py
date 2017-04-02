@@ -49,6 +49,8 @@ class QtPlotter:
 			self.x_time.append(int((x - UNIX_EPOCH).total_seconds()*1e6))
 		self.plt.setData(self.x_time, self.raw_data, pen='g')
 		self.ui_plot.setTitle('start time '+start_time.strftime("%d.%m.%y %H:%M:%S")+'; end time '+end_time.strftime("%d.%m.%y %H:%M:%S"))
+		self.ui.windowLenSpin.setValue(1)
+		
 
 	def win_len_change(self):
 		if str(self.ui.winTypeComboBox.currentText()) == 'rectangular':
