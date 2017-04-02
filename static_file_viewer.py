@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import numpy as np
-# import scipy.signal as ss
+import scipy.signal as ss
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
 from template_file_viewer import Ui_Form
@@ -28,6 +28,8 @@ class QtPlotter:
 		self.ui_plot.showGrid(x=True, y=True)
 		# self.ui_plot.setTitle('start time '+datetime.datetime.now().strftime("%d.%m.%y %H:%M:%S"))
 		self.ui.loadDataBtn.clicked.connect(self.load_data)
+		self.ui.windowLenSpin.valueChanged.connect(self.win_len_change)
+		self.ui.winTypeComboBox.currentIndexChanged.connect(self.win_len_change)
 		self.point_num = 0
 		self.max_num_points = 50000
 		self.data_x = []
@@ -38,14 +40,25 @@ class QtPlotter:
 	def load_data(self):
 		filename = QtGui.QFileDialog.getOpenFileName(self.win, 'Open File', os.path.dirname(os.path.abspath(__file__)))
 		data = np.load(str(filename))
-		x_time = []
+		self.raw_data = data['count']
+		self.x_time = []
 		start_time = datetime.datetime.utcfromtimestamp(float(data['time'][0])/1e6)
 		end_time = datetime.datetime.utcfromtimestamp(float(data['time'][1])/1e6)
 		for i in xrange(len(data['count'])):
 			x = start_time + datetime.timedelta(seconds=i)
-			x_time.append(int((x - UNIX_EPOCH).total_seconds()*1e6))
-		self.plt.setData(x_time, data['count'], pen='g')
+			self.x_time.append(int((x - UNIX_EPOCH).total_seconds()*1e6))
+		self.plt.setData(self.x_time, self.raw_data, pen='g')
 		self.ui_plot.setTitle('start time '+start_time.strftime("%d.%m.%y %H:%M:%S")+'; end time '+end_time.strftime("%d.%m.%y %H:%M:%S"))
+
+	def win_len_change(self):
+		if str(self.ui.winTypeComboBox.currentText()) == 'rectangular':
+			window = ss.boxcar(self.ui.windowLenSpin.value())
+		elif str(self.ui.winTypeComboBox.currentText()) == 'tukey':
+			window = ss.tukey(self.ui.windowLenSpin.value())
+		elif str(self.ui.winTypeComboBox.currentText()) == 'hann':
+			window = ss.hann(self.ui.windowLenSpin.value())
+		data_conv = ss.convolve(self.raw_data, window, mode='same')
+		self.plt.setData(self.x_time, data_conv, pen='g')
 
 plotter = QtPlotter()
 
