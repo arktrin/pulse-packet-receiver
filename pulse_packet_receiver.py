@@ -73,7 +73,7 @@ class QtPlotter:
 		self.end_time = now_timestamp()
 		start_end_time = np.array([self.start_time, self.end_time])
 		start_time_str = datetime.datetime.utcfromtimestamp(float(self.start_time)/1e6).strftime("%d.%m.%y_%H-%M-%S")
-		np.savez('saved_data/'+start_time_str+'.npz', time=start_end_time, count=self.raw_data[16:])
+		np.savez('saved_data/'+start_time_str+'.npz', time=start_end_time, count=self.raw_data[16:self.point_num+16])
 
 	def update(self):
 		for q, plt in self.ports:
