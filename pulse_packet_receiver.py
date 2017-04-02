@@ -6,7 +6,7 @@ import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
 from template_packet_receiver import Ui_Form
 from threading import Thread
-import socket, struct, Queue, datetime
+import sys, socket, struct, Queue, datetime
 
 host = ''
 port = 50987
@@ -57,8 +57,8 @@ class QtPlotter:
 		return q
 
 	def write_to_DAC(self):
-		raw_value = self.ui.thresholdValueSpin.value()
-		value = int((2**16-1)*raw_value/2500.0)
+		self.threshold_value = self.ui.thresholdValueSpin.value()
+		value = int((2**16-1)*self.threshold_value/2500.0)
 		value = value << 4
 		packet = list(struct.unpack('4B', struct.pack('>I', value)))
 		packet.pop(0)
@@ -73,7 +73,7 @@ class QtPlotter:
 		self.end_time = now_timestamp()
 		start_end_time = np.array([self.start_time, self.end_time])
 		start_time_str = datetime.datetime.utcfromtimestamp(float(self.start_time)/1e6).strftime("%d.%m.%y_%H-%M-%S")
-		np.savez('saved_data/'+start_time_str+'.npz', time=start_end_time, count=self.raw_data[16:self.point_num+16])
+		np.savez('saved_data/'+start_time_str+'.npz', time=start_end_time, threshold=self.threshold_value, count=self.raw_data[16:self.point_num+16])
 
 	def update(self):
 		for q, plt in self.ports:
@@ -91,7 +91,6 @@ class QtPlotter:
 				pass
 
 def qtLoop():
-	import sys
 	if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
 		QtGui.QApplication.instance().exec_()
 
