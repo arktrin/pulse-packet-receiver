@@ -41,7 +41,6 @@ class QtPlotter:
 		filename = QtGui.QFileDialog.getOpenFileName(self.win, 'Open File', os.path.dirname(os.path.abspath(__file__)))
 		data = np.load(str(filename))
 		self.raw_data = data['count']
-		print data['threshold']
 		self.x_time = []
 		start_time = datetime.datetime.utcfromtimestamp(float(data['time'][0])/1e6)
 		end_time = datetime.datetime.utcfromtimestamp(float(data['time'][1])/1e6)
@@ -50,7 +49,7 @@ class QtPlotter:
 			self.x_time.append(int((x - UNIX_EPOCH).total_seconds()*1e6))
 		self.plt.setData(self.x_time, self.raw_data, pen='g')
 		time_info = 'start time '+start_time.strftime("%d.%m.%y %H:%M:%S")+'; end time '+end_time.strftime("%d.%m.%y %H:%M:%S")
-		self.ui_plot.setTitle(time_info+'; threshold value = '+str(data['threshold'])+'mv')
+		self.ui_plot.setTitle(time_info+'; threshold value = '+str(data['threshold'])+'mV')
 		self.ui.windowLenSpin.setValue(1)
 		
 
