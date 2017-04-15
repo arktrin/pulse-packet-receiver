@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>594</width>
-    <height>718</height>
+    <height>361</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,23 +16,10 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QListWidget" name="listWidget"/>
-    </item>
-    <item>
      <widget class="QTableWidget" name="tableWidget">
       <row>
        <property name="text">
         <string>1</string>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>2</string>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>3</string>
        </property>
       </row>
       <column>
@@ -55,13 +42,6 @@
         <string>Status</string>
        </property>
       </column>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="btnBrowse">
-      <property name="text">
-       <string>Pick a folder</string>
-      </property>
      </widget>
     </item>
    </layout>

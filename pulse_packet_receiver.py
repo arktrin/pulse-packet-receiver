@@ -43,6 +43,7 @@ class QtPlotter:
 		self.point_num = 0
 		self.max_num_points = 50000
 		self.data_x = []
+		self.threshold_value = self.ui.thresholdValueSpin.value()
 		self.raw_data = np.zeros(self.max_num_points)
 		self.sum_data = np.zeros((self.max_num_points, 16))
 		self.start_time = now_timestamp()
@@ -70,10 +71,10 @@ class QtPlotter:
 		sock.sendto(packed_data, ('192.168.2.255', port))
 
 	def save_data(self):
-		self.end_time = now_timestamp()
-		start_end_time = np.array([self.start_time, self.end_time])
+		# self.end_time = now_timestamp()
+		# start_end_time = np.array([self.start_time, self.end_time])
 		start_time_str = datetime.datetime.utcfromtimestamp(float(self.start_time)/1e6).strftime("%d.%m.%y_%H-%M-%S")
-		np.savez('saved_data/'+start_time_str+'.npz', time=start_end_time, threshold=self.threshold_value, count=self.raw_data[16:self.point_num+16])
+		np.savez('saved_data/'+start_time_str+'.npz', time=self.data_x, threshold=self.threshold_value, count=self.raw_data[16:self.point_num+16])
 
 	def update(self):
 		for q, plt in self.ports:

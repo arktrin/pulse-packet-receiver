@@ -13,15 +13,7 @@ class ExampleApp(QtGui.QMainWindow, template_schedule.Ui_MainWindow):
 	def __init__(self):
 		super(self.__class__, self).__init__()
 		self.setupUi(self)  
-		self.btnBrowse.clicked.connect(self.browse_folder)
-
-	def browse_folder(self):
-		self.listWidget.clear() # In case there are any existing elements in the list
-		directory = QtGui.QFileDialog.getExistingDirectory(self, "Pick a folder")
-
-		if directory: # if user didn't pick a directory don't continue
-			for file_name in os.listdir(directory): # for all files, if any, in the directory
-				self.listWidget.addItem(file_name)  # add file to the listWidget
+		self.tableWidget.setColumnWidth(2, 160)
 
 
 def main():
@@ -31,5 +23,5 @@ def main():
 	app.exec_()  # and execute the app
 
 
-if __name__ == '__main__':  # if we're running file directly and not importing it
+if __name__ == '__main__':
 	main()  # run the main function
