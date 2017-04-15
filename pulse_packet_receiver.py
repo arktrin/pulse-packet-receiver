@@ -14,6 +14,7 @@ data = np.zeros(100000)
 pack_struct = '!' + 36*'B' + 2*'I'
 count = 0
 num_points = 0
+default_threshold_value = 100.0
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
@@ -41,12 +42,18 @@ class QtPlotter:
 		self.ui.saveDataBtn.clicked.connect(self.save_data)
 		self.ui.thresholdWriteBtn.clicked.connect(self.write_to_DAC)
 		self.point_num = 0
-		self.max_num_points = 50000
+		self.max_num_points = 80000
 		self.data_x = []
-		self.threshold_value = self.ui.thresholdValueSpin.value()
+		self.threshold_value = default_threshold_value
+		self.ui.thresholdValueSpin.setValue(default_threshold_value)
 		self.raw_data = np.zeros(self.max_num_points)
 		self.sum_data = np.zeros((self.max_num_points, 16))
 		self.start_time = now_timestamp()
+		if len(sys.argv) == 6:
+			self.end_time = datetime.datetime.strptime(sys.argv[3]+' '+sys.argv[4], '%d.%m.%y %H:%M:%S')
+			self.ui.thresholdValueSpin.setValue( round(float(sys.argv[5]),1) )
+			self.threshold_value = round(float(sys.argv[5]),1)
+		self.write_to_DAC()
 		self.timer.timeout.connect(self.update)
 		self.timer.start(0)
 		# self.ui_plot.setAspectLocked(True)
@@ -71,8 +78,6 @@ class QtPlotter:
 		sock.sendto(packed_data, ('192.168.2.255', port))
 
 	def save_data(self):
-		# self.end_time = now_timestamp()
-		# start_end_time = np.array([self.start_time, self.end_time])
 		start_time_str = datetime.datetime.utcfromtimestamp(float(self.start_time)/1e6).strftime("%d.%m.%y_%H-%M-%S")
 		np.savez('saved_data/'+start_time_str+'.npz', time=self.data_x, threshold=self.threshold_value, count=self.raw_data[16:self.point_num+16])
 
@@ -88,6 +93,10 @@ class QtPlotter:
 				self.data_x.append(x)
 				self.point_num += 1
 				plt.setData(self.data_x, self.sum_data[:self.point_num, self.ui.windowLenSpin.value()-1], pen='g')
+				diff = self.end_time - datetime.datetime.utcfromtimestamp(float(x)/1e6)
+				if diff.total_seconds() < 0:
+					self.save_data()
+					self.app.quit()
 			except Queue.Empty:
 				pass
 
