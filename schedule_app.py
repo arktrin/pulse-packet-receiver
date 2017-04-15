@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 from PyQt4 import QtGui, QtCore
-import sys, os, datetime, subprocess
+import sys, os, datetime
+import subprocess as sp
 import template_schedule
 
 now = datetime.datetime.now()
@@ -12,7 +13,9 @@ class ScheduleApp(QtGui.QMainWindow, template_schedule.Ui_MainWindow):
 	def __init__(self):
 		super(self.__class__, self).__init__()
 		self.setupUi(self)  
-		self.tableWidget.setColumnWidth(2, 160)
+		# self.tableWidget.setColumnWidth(2, 160)
+		header = self.tableWidget.horizontalHeader()
+		header.setResizeMode(QtGui.QHeaderView.Stretch)
 		self.startDateTimeEdit.setDate(QtCore.QDate(soon.year, soon.month, soon.day))
 		self.startDateTimeEdit.setTime(QtCore.QTime(soon.hour, soon.minute, soon.second))
 		self.endDateTimeEdit.setDate(QtCore.QDate(then.year, then.month, then.day))
@@ -24,14 +27,20 @@ class ScheduleApp(QtGui.QMainWindow, template_schedule.Ui_MainWindow):
 		self.addTaskBtn.clicked.connect(self.add_task)
 
 	def add_task(self):
-		start = self.startDateTimeEdit.dateTime().toPyDateTime().strftime("%d.%m.%y %H:%M:%S")
-		end = self.startDateTimeEdit.dateTime().toPyDateTime().strftime("%d.%m.%y %H:%M:%S")
+		start = self.startDateTimeEdit.dateTime().toPyDateTime().strftime("%d.%m.%y %H:%M")
+		end = self.endDateTimeEdit.dateTime().toPyDateTime().strftime("%d.%m.%y %H:%M:%S")
 		threshold = str(self.thresholdValSpin.value())
 		text_for_at = self.startDateTimeEdit.dateTime().toPyDateTime().strftime("%H:%M %d.%m.%y")
 		bash_command = 'echo "env DISPLAY=:0 pulse_packet_receiver.py" '+start+' '+end+' '+threshold+' | at '+text_for_at
-		process = subprocess.Popen(['bash','-c', bash_command], stdout=subprocess.PIPE)
+		process = sp.Popen(['bash','-c', bash_command], stdout=sp.PIPE)
 		output, error = process.communicate()
-		print output, error
+		print output.read()
+		if error == None:
+			rowPosition = self.tableWidget.rowCount()
+			self.tableWidget.insertRow(rowPosition)
+			self.tableWidget.setItem(rowPosition , 0, QtGui.QTableWidgetItem(start+':00'))
+			self.tableWidget.setItem(rowPosition , 1, QtGui.QTableWidgetItem(end))
+			self.tableWidget.setItem(rowPosition , 2, QtGui.QTableWidgetItem(threshold))
 
 
 def main():

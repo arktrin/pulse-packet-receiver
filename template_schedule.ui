@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>729</width>
-    <height>694</height>
+    <width>798</width>
+    <height>592</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,11 +20,6 @@
       <property name="enabled">
        <bool>true</bool>
       </property>
-      <row>
-       <property name="text">
-        <string>1</string>
-       </property>
-      </row>
       <column>
        <property name="text">
         <string>Start time</string>
@@ -38,6 +33,11 @@
       <column>
        <property name="text">
         <string>Threshold value, mV</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Job number</string>
        </property>
       </column>
       <column>
@@ -189,6 +189,13 @@
        <widget class="QPushButton" name="rmTasksBtn">
         <property name="text">
          <string>Remove selected tasks</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string/>
         </property>
        </widget>
       </item>
