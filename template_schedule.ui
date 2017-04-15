@@ -52,111 +52,7 @@
       <property name="topMargin">
        <number>5</number>
       </property>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>example:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="2">
-       <widget class="QLineEdit" name="endTimeEdit">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="startTimeEdit">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Start time</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4">
-       <widget class="QPushButton" name="addTaskBtn">
-        <property name="text">
-         <string>Add task</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>End time</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Threshold value, mV</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="4">
-       <widget class="QPushButton" name="rmTasksBtn">
-        <property name="text">
-         <string>Remove selected tasks</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string> 05.05.17 12:03:30</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string> 05.05.17 17:23:30</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="3">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string> 120,7</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
        <widget class="QDoubleSpinBox" name="thresholdValSpin">
         <property name="decimals">
          <number>1</number>
@@ -169,6 +65,130 @@
         </property>
         <property name="value">
          <double>100.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QDateTimeEdit" name="startDateTimeEdit">
+        <property name="date">
+         <date>
+          <year>2030</year>
+          <month>1</month>
+          <day>1</day>
+         </date>
+        </property>
+        <property name="time">
+         <time>
+          <hour>0</hour>
+          <minute>0</minute>
+          <second>25</second>
+         </time>
+        </property>
+        <property name="maximumDateTime">
+         <datetime>
+          <hour>23</hour>
+          <minute>59</minute>
+          <second>59</second>
+          <year>7930</year>
+          <month>12</month>
+          <day>31</day>
+         </datetime>
+        </property>
+        <property name="minimumDateTime">
+         <datetime>
+          <hour>0</hour>
+          <minute>0</minute>
+          <second>0</second>
+          <year>2017</year>
+          <month>1</month>
+          <day>14</day>
+         </datetime>
+        </property>
+        <property name="maximumDate">
+         <date>
+          <year>7930</year>
+          <month>12</month>
+          <day>31</day>
+         </date>
+        </property>
+        <property name="minimumDate">
+         <date>
+          <year>2017</year>
+          <month>1</month>
+          <day>14</day>
+         </date>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QPushButton" name="addTaskBtn">
+        <property name="text">
+         <string>Add task</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>End time</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Threshold value, mV</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Start time</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QDateTimeEdit" name="endDateTimeEdit">
+        <property name="time">
+         <time>
+          <hour>0</hour>
+          <minute>11</minute>
+          <second>17</second>
+         </time>
+        </property>
+        <property name="maximumDate">
+         <date>
+          <year>7930</year>
+          <month>12</month>
+          <day>31</day>
+         </date>
+        </property>
+        <property name="minimumDate">
+         <date>
+          <year>1817</year>
+          <month>9</month>
+          <day>14</day>
+         </date>
+        </property>
+        <property name="displayFormat">
+         <string>dd.MM.yy H:mm:ss</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QPushButton" name="rmTasksBtn">
+        <property name="text">
+         <string>Remove selected tasks</string>
         </property>
        </widget>
       </item>
