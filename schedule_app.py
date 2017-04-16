@@ -44,10 +44,9 @@ class ScheduleApp(QtGui.QMainWindow, template_schedule.Ui_MainWindow):
 		text_for_at = self.startDateTimeEdit.dateTime().toPyDateTime().strftime("%H:%M %d.%m.%y")
 		bash_command = 'echo "env DISPLAY=:0 pulse_packet_receiver.py" '+start+' '+end+' '+threshold+' | at '+text_for_at
 		process = sp.Popen(['bash','-c', bash_command], stdout=sp.PIPE)
-		output, error = process.communicate()
-		# print process.stdout
-		if error == None:
-			self.add_row('', start+':00', end, threshold, '')
+		self.tableWidget.setRowCount(0);
+		update_jobs()
+		self.jobs_to_table()
 
 	def add_row(self, jobNumCol, startCol, endCol, thresholdCol, statusCol):
 		rowPosition = self.tableWidget.rowCount()
@@ -76,10 +75,31 @@ class ScheduleApp(QtGui.QMainWindow, template_schedule.Ui_MainWindow):
 		keys_to_delete = []
 		for key, checkbox in self.checkbox_items.iteritems():
 			if checkbox.checkState() == QtCore.Qt.Checked:
-				self.tableWidget.removeRow(checkbox.row())
+				row = checkbox.row()
+				start = self.tableWidget.item(row, 0).text()+' '+self.tableWidget.item(row, 1).text()
+				end = self.tableWidget.item(row, 2).text()+' '+self.tableWidget.item(row, 3).text()
+				status = self.tableWidget.item(row, 4).text()
+				self.rm_task_from_jobs_txt(str(start+' '+end))
+				if status == 'Pending':
+					pass
+				update_jobs()
+				self.tableWidget.removeRow(row)
 				keys_to_delete.append(key)
 		for key in keys_to_delete:
 			del self.checkbox_items[key]
+
+	def rm_task_from_jobs_txt(self, start_end):
+		with open('jobs.txt', 'r') as f:
+			lines_to_leave = []
+			lines = f.read().split('\n')[:-1]
+			for i in xrange(len(lines)):
+				if start_end not in lines[i]:
+					lines_to_leave.append(i)
+		with open('jobs.txt', 'w') as f:
+			for i in xrange(len(lines)):
+				if i in lines_to_leave:
+					f.write(lines[i]+'\n')
+					
 
 	def jobs_to_table(self):
 		with open('jobs.txt', 'r') as f:
