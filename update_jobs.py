@@ -14,6 +14,7 @@ with open('jobs.txt', 'r') as f:
 process = sp.Popen(['atq'], stdout=sp.PIPE)
 out, error = process.communicate()
 lines = out.split('\n')[:-1]
+
 with open('jobs.txt', 'w') as f:
 	for line in lines:
 		job_num = line.split('\t')[0]
@@ -21,7 +22,6 @@ with open('jobs.txt', 'w') as f:
 		process = sp.Popen(['bash','-c', bash_command], stdout=sp.PIPE)
 		out, error = process.communicate()
 		out_split = out.replace('\n','').split(' ')
-		# out_split[-1] = out_split[-1][:-2]
 		out_split[4] += ':00'
 		f.write(' '.join([job_num] + out_split[3:] + ['Pending\n']))
 	for job in done_jobs:

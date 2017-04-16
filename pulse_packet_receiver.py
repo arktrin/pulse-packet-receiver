@@ -6,7 +6,7 @@ import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
 from template_packet_receiver import Ui_Form
 from threading import Thread
-import sys, time, socket, struct, Queue, datetime
+import sys, socket, struct, Queue, datetime
 import subprocess as sp
 
 host = ''
@@ -89,8 +89,7 @@ class QtPlotter:
 		np.savez('saved_data/'+start_time_str+'.npz', time=self.data_x, threshold=self.threshold_value, count=self.raw_data[16:self.point_num+16])
 
 	def check_done(self):
-		update_jobs()
-		time.sleep(1)
+		update_jobs() # add QtCore.QTimer.singleShot(400, lambda: self...())
 		with open('jobs.txt', 'a') as f:
 			f.write(self.str_done)
 
