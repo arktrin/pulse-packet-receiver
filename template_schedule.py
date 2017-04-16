@@ -98,6 +98,9 @@ class Ui_MainWindow(object):
         self.pushButton = QtGui.QPushButton(self.centralwidget)
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
         self.gridLayout.addWidget(self.pushButton, 2, 5, 1, 1)
+        self.updTableBtn = QtGui.QPushButton(self.centralwidget)
+        self.updTableBtn.setObjectName(_fromUtf8("updTableBtn"))
+        self.gridLayout.addWidget(self.updTableBtn, 1, 5, 1, 1)
         self.verticalLayout.addLayout(self.gridLayout)
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -125,4 +128,5 @@ class Ui_MainWindow(object):
         self.endDateTimeEdit.setDisplayFormat(_translate("MainWindow", "dd.MM.yy H:mm:ss", None))
         self.rmSelTasksBtn.setText(_translate("MainWindow", "Remove selected tasks", None))
         self.pushButton.setText(_translate("MainWindow", "Remove all done tasks", None))
+        self.updTableBtn.setText(_translate("MainWindow", "Update table", None))
 

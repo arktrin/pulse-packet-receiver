@@ -13,8 +13,6 @@ def update_jobs():
 	bash_command = 'update_jobs.py'
 	process = sp.Popen(['bash','-c', bash_command], stdout=sp.PIPE)
 
-update_jobs()
-
 
 class ScheduleApp(QtGui.QMainWindow, template_schedule.Ui_MainWindow):
 	def __init__(self):
@@ -33,9 +31,10 @@ class ScheduleApp(QtGui.QMainWindow, template_schedule.Ui_MainWindow):
 		self.endDateTimeEdit.setMinimumDateTime(QtCore.QDateTime(QtCore.QDate(now.year, now.month, now.day), QtCore.QTime(now.hour, now.minute, now.second)))
 		self.addTaskBtn.clicked.connect(self.add_task)
 		self.rmSelTasksBtn.clicked.connect(self.rm_selected_tasks)
+		self.updTableBtn.clicked.connect(self.update_table)
 		self.checkbox_items = {}
 		self.i_check = 0
-		self.jobs_to_table()
+		self.update_table()
 
 	def add_task(self):
 		start = self.startDateTimeEdit.dateTime().toPyDateTime().strftime("%d.%m.%y %H:%M")
@@ -44,10 +43,7 @@ class ScheduleApp(QtGui.QMainWindow, template_schedule.Ui_MainWindow):
 		text_for_at = self.startDateTimeEdit.dateTime().toPyDateTime().strftime("%H:%M %d.%m.%y")
 		bash_command = 'echo "env DISPLAY=:0 pulse_packet_receiver.py" '+start+' '+end+' '+threshold+' | at '+text_for_at
 		process = sp.Popen(['bash','-c', bash_command], stdout=sp.PIPE)
-		self.tableWidget.setRowCount(0)
-		update_jobs()
-		time.sleep(10)
-		self.jobs_to_table()
+		self.update_table()
 
 	def add_row(self, jobNumCol, startCol, endCol, thresholdCol, statusCol):
 		rowPosition = self.tableWidget.rowCount()
@@ -80,15 +76,16 @@ class ScheduleApp(QtGui.QMainWindow, template_schedule.Ui_MainWindow):
 				job_num = self.tableWidget.item(row, 0).text()
 				start_end = self.tableWidget.item(row, 1).text()+' '+self.tableWidget.item(row, 2).text()
 				status = self.tableWidget.item(row, 4).text()
-				self.rm_task_from_jobs_txt(str(start_end))
-				if status == 'Pending':
+				if status == 'Done':
+					self.rm_task_from_jobs_txt(str(start_end))
+				elif status == 'Pending':
 					bash_command = 'atrm '+job_num
 					process = sp.Popen(['bash','-c', bash_command], stdout=sp.PIPE)
 				self.tableWidget.removeRow(row)
 				keys_to_delete.append(key)
 		for key in keys_to_delete:
 			del self.checkbox_items[key]
-		update_jobs()
+		self.update_table()
 
 	def rm_task_from_jobs_txt(self, start_end):
 		with open('jobs.txt', 'r') as f:
@@ -109,6 +106,12 @@ class ScheduleApp(QtGui.QMainWindow, template_schedule.Ui_MainWindow):
 			for line in lines:
 				row_vals = line.split(' ')
 				self.add_row(row_vals[0], row_vals[1]+' '+row_vals[2], row_vals[3]+' '+row_vals[4], row_vals[5], row_vals[6])
+
+	def update_table(self):
+		self.tableWidget.setRowCount(0)
+		update_jobs()
+		QtCore.QTimer.singleShot(400, lambda: self.jobs_to_table())
+
 
 
 def main():
