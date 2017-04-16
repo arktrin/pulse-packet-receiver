@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from PyQt4 import QtGui, QtCore
-import sys, os, datetime
+import sys, os, time, datetime
 import subprocess as sp
 import template_schedule
 
@@ -44,8 +44,9 @@ class ScheduleApp(QtGui.QMainWindow, template_schedule.Ui_MainWindow):
 		text_for_at = self.startDateTimeEdit.dateTime().toPyDateTime().strftime("%H:%M %d.%m.%y")
 		bash_command = 'echo "env DISPLAY=:0 pulse_packet_receiver.py" '+start+' '+end+' '+threshold+' | at '+text_for_at
 		process = sp.Popen(['bash','-c', bash_command], stdout=sp.PIPE)
-		self.tableWidget.setRowCount(0);
+		self.tableWidget.setRowCount(0)
 		update_jobs()
+		time.sleep(10)
 		self.jobs_to_table()
 
 	def add_row(self, jobNumCol, startCol, endCol, thresholdCol, statusCol):
@@ -76,17 +77,18 @@ class ScheduleApp(QtGui.QMainWindow, template_schedule.Ui_MainWindow):
 		for key, checkbox in self.checkbox_items.iteritems():
 			if checkbox.checkState() == QtCore.Qt.Checked:
 				row = checkbox.row()
-				start = self.tableWidget.item(row, 0).text()+' '+self.tableWidget.item(row, 1).text()
-				end = self.tableWidget.item(row, 2).text()+' '+self.tableWidget.item(row, 3).text()
+				job_num = self.tableWidget.item(row, 0).text()
+				start_end = self.tableWidget.item(row, 1).text()+' '+self.tableWidget.item(row, 2).text()
 				status = self.tableWidget.item(row, 4).text()
-				self.rm_task_from_jobs_txt(str(start+' '+end))
+				self.rm_task_from_jobs_txt(str(start_end))
 				if status == 'Pending':
-					pass
-				update_jobs()
+					bash_command = 'atrm '+job_num
+					process = sp.Popen(['bash','-c', bash_command], stdout=sp.PIPE)
 				self.tableWidget.removeRow(row)
 				keys_to_delete.append(key)
 		for key in keys_to_delete:
 			del self.checkbox_items[key]
+		update_jobs()
 
 	def rm_task_from_jobs_txt(self, start_end):
 		with open('jobs.txt', 'r') as f:
@@ -110,10 +112,10 @@ class ScheduleApp(QtGui.QMainWindow, template_schedule.Ui_MainWindow):
 
 
 def main():
-	app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
+	app = QtGui.QApplication(sys.argv)
 	form = ScheduleApp()
-	form.show()  # Show the form
-	app.exec_()  # and execute the app
+	form.show()
+	app.exec_()
 
 
 if __name__ == '__main__':
