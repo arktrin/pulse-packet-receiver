@@ -9,13 +9,20 @@ now = datetime.datetime.now()
 soon = now + datetime.timedelta(minutes=1)
 then = now + datetime.timedelta(minutes=2)
 
+def update_jobs():
+	bash_command = 'update_jobs.py'
+	process = sp.Popen(['bash','-c', bash_command], stdout=sp.PIPE)
+
+update_jobs()
+
+
 class ScheduleApp(QtGui.QMainWindow, template_schedule.Ui_MainWindow):
 	def __init__(self):
 		super(self.__class__, self).__init__()
 		self.setupUi(self)  
 		# self.tableWidget.setColumnWidth(2, 160)
-		header = self.tableWidget.horizontalHeader()
-		header.setResizeMode(QtGui.QHeaderView.Stretch)
+		self.header = self.tableWidget.horizontalHeader()
+		self.header.setResizeMode(QtGui.QHeaderView.Stretch)
 		self.startDateTimeEdit.setDate(QtCore.QDate(soon.year, soon.month, soon.day))
 		self.startDateTimeEdit.setTime(QtCore.QTime(soon.hour, soon.minute, soon.second))
 		self.endDateTimeEdit.setDate(QtCore.QDate(then.year, then.month, then.day))
@@ -25,6 +32,7 @@ class ScheduleApp(QtGui.QMainWindow, template_schedule.Ui_MainWindow):
 		self.endDateTimeEdit.setMaximumDate(QtCore.QDate(2030, 12, 31))
 		self.endDateTimeEdit.setMinimumDateTime(QtCore.QDateTime(QtCore.QDate(now.year, now.month, now.day), QtCore.QTime(now.hour, now.minute, now.second)))
 		self.addTaskBtn.clicked.connect(self.add_task)
+		self.jobs_to_table()
 
 	def add_task(self):
 		start = self.startDateTimeEdit.dateTime().toPyDateTime().strftime("%d.%m.%y %H:%M")
@@ -34,13 +42,31 @@ class ScheduleApp(QtGui.QMainWindow, template_schedule.Ui_MainWindow):
 		bash_command = 'echo "env DISPLAY=:0 pulse_packet_receiver.py" '+start+' '+end+' '+threshold+' | at '+text_for_at
 		process = sp.Popen(['bash','-c', bash_command], stdout=sp.PIPE)
 		output, error = process.communicate()
-		print output.read()
+		# print process.stdout
 		if error == None:
-			rowPosition = self.tableWidget.rowCount()
-			self.tableWidget.insertRow(rowPosition)
-			self.tableWidget.setItem(rowPosition , 0, QtGui.QTableWidgetItem(start+':00'))
-			self.tableWidget.setItem(rowPosition , 1, QtGui.QTableWidgetItem(end))
-			self.tableWidget.setItem(rowPosition , 2, QtGui.QTableWidgetItem(threshold))
+			self.add_row('', start+':00', end, threshold, '')
+
+	def add_row(self, jobNumCol, startCol, endCol, thresholdCol, statusCol):
+		rowPosition = self.tableWidget.rowCount()
+		self.tableWidget.insertRow(rowPosition)
+		self.tableWidget.setItem(rowPosition , 0, QtGui.QTableWidgetItem(jobNumCol))
+		self.tableWidget.setItem(rowPosition , 1, QtGui.QTableWidgetItem(startCol))
+		self.tableWidget.setItem(rowPosition , 2, QtGui.QTableWidgetItem(endCol))
+		self.tableWidget.setItem(rowPosition , 3, QtGui.QTableWidgetItem(thresholdCol))
+		self.tableWidget.setItem(rowPosition , 4, QtGui.QTableWidgetItem(statusCol))
+		if statusCol == 'Done':
+			self.tableWidget.item(rowPosition, 0).setBackground(QtGui.QColor(141, 244, 95))
+			self.tableWidget.item(rowPosition, 1).setBackground(QtGui.QColor(141, 244, 95))
+			self.tableWidget.item(rowPosition, 2).setBackground(QtGui.QColor(141, 244, 95))
+			self.tableWidget.item(rowPosition, 3).setBackground(QtGui.QColor(141, 244, 95))
+			self.tableWidget.item(rowPosition, 4).setBackground(QtGui.QColor(141, 244, 95))
+
+	def jobs_to_table(self):
+		with open('jobs.txt', 'r') as f:
+			lines = f.read().split('\n')[:-1]
+			for line in lines:
+				row_vals = line.split(' ')
+				self.add_row(row_vals[0], row_vals[1]+' '+row_vals[2], row_vals[3]+' '+row_vals[4], row_vals[5], row_vals[6])
 
 
 def main():

@@ -6,7 +6,8 @@ import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
 from template_packet_receiver import Ui_Form
 from threading import Thread
-import sys, socket, struct, Queue, datetime
+import sys, time, socket, struct, Queue, datetime
+import subprocess as sp
 
 host = ''
 port = 50987
@@ -24,6 +25,11 @@ UNIX_EPOCH = datetime.datetime(1970, 1, 1, 0, 0)
 
 def now_timestamp(epoch=UNIX_EPOCH):
 	return(int((datetime.datetime.now() - epoch).total_seconds()*1e6))
+
+def update_jobs():
+	bash_command = 'update_jobs.py'
+	process = sp.Popen(['bash','-c', bash_command], stdout=sp.PIPE)
+
 
 class QtPlotter:
 	def __init__(self):
@@ -50,6 +56,7 @@ class QtPlotter:
 		self.sum_data = np.zeros((self.max_num_points, 16))
 		self.start_time = now_timestamp()
 		if len(sys.argv) == 6:
+			self.str_done = '- '+sys.argv[1]+' '+sys.argv[2]+':00 '+sys.argv[3]+' '+sys.argv[4]+' '+sys.argv[5]+' Done\n'
 			self.end_time = datetime.datetime.strptime(sys.argv[3]+' '+sys.argv[4], '%d.%m.%y %H:%M:%S')
 			self.ui.thresholdValueSpin.setValue( round(float(sys.argv[5]),1) )
 			self.threshold_value = round(float(sys.argv[5]),1)
@@ -81,6 +88,13 @@ class QtPlotter:
 		start_time_str = datetime.datetime.utcfromtimestamp(float(self.start_time)/1e6).strftime("%d.%m.%y_%H-%M-%S")
 		np.savez('saved_data/'+start_time_str+'.npz', time=self.data_x, threshold=self.threshold_value, count=self.raw_data[16:self.point_num+16])
 
+	def check_done(self):
+		update_jobs()
+		time.sleep(1)
+		with open('jobs.txt', 'a') as f:
+			f.write(self.str_done)
+
+
 	def update(self):
 		for q, plt in self.ports:
 			try:
@@ -93,10 +107,12 @@ class QtPlotter:
 				self.data_x.append(x)
 				self.point_num += 1
 				plt.setData(self.data_x, self.sum_data[:self.point_num, self.ui.windowLenSpin.value()-1], pen='g')
-				diff = self.end_time - datetime.datetime.utcfromtimestamp(float(x)/1e6)
-				if diff.total_seconds() < 0:
-					self.save_data()
-					self.app.quit()
+				if len(sys.argv) == 6:
+					diff = self.end_time - datetime.datetime.utcfromtimestamp(float(x)/1e6)
+					if diff.total_seconds() < 0:
+						self.save_data()
+						self.check_done()
+						self.app.quit()
 			except Queue.Empty:
 				pass
 
