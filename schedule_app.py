@@ -17,7 +17,8 @@ def update_jobs():
 class ScheduleApp(QtGui.QMainWindow, template_schedule.Ui_MainWindow):
 	def __init__(self):
 		super(self.__class__, self).__init__()
-		self.setupUi(self)  
+		self.setupUi(self)
+		self.setWindowTitle('Task scheduler')
 		# self.tableWidget.setColumnWidth(2, 160)
 		self.header = self.tableWidget.horizontalHeader()
 		self.header.setResizeMode(QtGui.QHeaderView.Stretch)
@@ -109,6 +110,7 @@ class ScheduleApp(QtGui.QMainWindow, template_schedule.Ui_MainWindow):
 
 	def update_table(self):
 		self.tableWidget.setRowCount(0)
+		self.checkbox_items = {}
 		update_jobs()
 		QtCore.QTimer.singleShot(400, lambda: self.jobs_to_table())
 
