@@ -56,10 +56,11 @@ class QtPlotter:
 		self.sum_data = np.zeros((self.max_num_points, 16))
 		self.start_time = now_timestamp()
 		if len(sys.argv) == 6:
-			self.str_done = '- '+sys.argv[1]+' '+sys.argv[2]+':00 '+sys.argv[3]+' '+sys.argv[4]+' '+sys.argv[5]+' Done\n'
+			self.str_find = sys.argv[1]+' '+sys.argv[2]+':00 '+sys.argv[3]+' '+sys.argv[4]+' '+sys.argv[5] # +' Done\n'
 			self.end_time = datetime.datetime.strptime(sys.argv[3]+' '+sys.argv[4], '%d.%m.%y %H:%M:%S')
 			self.ui.thresholdValueSpin.setValue( round(float(sys.argv[5]),1) )
 			self.threshold_value = round(float(sys.argv[5]),1)
+			self.find_job_num()
 		self.write_to_DAC()
 		self.timer.timeout.connect(self.update)
 		self.timer.start(0)
@@ -88,10 +89,19 @@ class QtPlotter:
 		start_time_str = datetime.datetime.utcfromtimestamp(float(self.start_time)/1e6).strftime("%d.%m.%y_%H-%M-%S")
 		np.savez('saved_data/'+start_time_str+'.npz', time=self.data_x, threshold=self.threshold_value, count=self.raw_data[16:self.point_num+16])
 
+	def find_job_num(self):
+		with open('jobs.txt', 'r') as f:
+			lines = f.read().split('n')[:-1]
+			for i in xrange(len(lines)):
+				if self.str_find in lines[i]:
+					self.job_num = lines[i].split(' ')[0]
+					break
+
+
 	def check_done(self):
-		update_jobs() # add QtCore.QTimer.singleShot(400, lambda: self...())
+		# update_jobs() # add QtCore.QTimer.singleShot(400, lambda: self...())
 		with open('jobs.txt', 'a') as f:
-			f.write(self.str_done)
+			f.write(self.job_num+' '+self.str_find+' Done\n')
 
 
 	def update(self):
