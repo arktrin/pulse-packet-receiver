@@ -11,7 +11,8 @@ with open('jobs.txt', 'r') as f:
 		if 'Done' in lines[i]:
 			done_jobs.append(lines[i]+'\n')
 
-process = sp.Popen(['atq'], stdout=sp.PIPE)
+bash_command = 'atq | sort -k6n -k3M -k4n -k5n'
+process = sp.Popen(['bash','-c', bash_command], stdout=sp.PIPE)
 out, error = process.communicate()
 lines = out.split('\n')[:-1]
 
