@@ -115,7 +115,6 @@ class ScheduleApp(QtGui.QMainWindow, template_schedule.Ui_MainWindow):
 		QtCore.QTimer.singleShot(400, lambda: self.jobs_to_table())
 
 
-
 def main():
 	app = QtGui.QApplication(sys.argv)
 	form = ScheduleApp()
