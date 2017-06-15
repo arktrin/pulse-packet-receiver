@@ -47,7 +47,7 @@
       </column>
       <column>
        <property name="text">
-        <string> </string>
+        <string/>
        </property>
       </column>
      </widget>
@@ -201,13 +201,6 @@
        <widget class="QLabel" name="label_4">
         <property name="text">
          <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="5">
-       <widget class="QPushButton" name="pushButton">
-        <property name="text">
-         <string>Remove all done tasks</string>
         </property>
        </widget>
       </item>

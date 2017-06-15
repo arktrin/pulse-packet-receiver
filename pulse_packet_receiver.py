@@ -136,12 +136,13 @@ def main_loop():
 	def producer():
 		global sock,pack_struct,num_points
 		while True:
-			curve.put(( 10*np.random.randn()  ))
+			# curve.put(( 10*np.random.randn()  ))
 			data_raw, addr = sock.recvfrom(64)
 			if len(data_raw) == 44:
 				data_unpacked = struct.unpack(pack_struct, data_raw)
 				data[num_points] = data_unpacked[-2] # - 1e5
-				print data_unpacked[-2]
+				# print data_unpacked[-2]
+				curve.put((data_unpacked[-2]))
 				num_points += 1
 
 	p = Thread(target=producer)
