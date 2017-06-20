@@ -6,8 +6,10 @@ import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
 from template_packet_receiver import Ui_Form
 from threading import Thread
-import sys, socket, struct, Queue, datetime
+import sys, socket, os, struct, Queue, datetime
 import subprocess as sp
+
+os.chdir(os.path.dirname(__file__))
 
 host = ''
 port = 50987

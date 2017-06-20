@@ -7,6 +7,8 @@ from pyqtgraph.Qt import QtCore, QtGui
 from template_file_viewer import Ui_Form
 import os, datetime
 
+os.chdir(os.path.dirname(__file__))
+
 num_points = 0
 
 UNIX_EPOCH = datetime.datetime(1970, 1, 1, 0, 0)

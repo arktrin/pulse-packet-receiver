@@ -5,6 +5,8 @@ import sys, os, time, datetime
 import subprocess as sp
 import template_schedule
 
+os.chdir(os.path.dirname(__file__))
+
 now = datetime.datetime.now()
 soon = now + datetime.timedelta(minutes=1)
 then = now + datetime.timedelta(minutes=2)
