@@ -49,16 +49,19 @@ class QtPlotter:
 		end_time = datetime.datetime.utcfromtimestamp(float(data['time'][-1])/1e6)
 		self.plt.setData(self.data_x, self.raw_data, pen='g')
 		time_info = 'start time '+start_time.strftime("%d.%m.%y %H:%M:%S")+'; end time '+end_time.strftime("%d.%m.%y %H:%M:%S")
-		self.ui_plot.setTitle(time_info+'; threshold value = '+str(data['threshold'])+'mV')
+		self.title = time_info+'; threshold value = '+str(data['threshold'])+'mV'
+		self.ui_plot.setTitle(self.title, color='w', size='15pt')
 		self.ui.windowLenSpin.setValue(1)
 
 	def export_image(self):
 		self.plt.setData(self.data_x, self.raw_data, pen=(0, 0, 0))
+		self.ui_plot.setTitle(self.title, color=(0, 0, 0), size='15pt')
 		exporter = pg.exporters.ImageExporter(self.ui_plot.plotItem)
 		exporter.parameters()['background'] = 'w'
 		self.app.processEvents()
 		filename = QtGui.QFileDialog.getSaveFileName(self.win, 'Export image', os.getenv("HOME"))
 		exporter.export(str(filename)+'.png')
+		self.ui_plot.setTitle(self.title, color='w', size='15pt')
 		self.plt.setData(self.data_x, self.raw_data, pen='g')
 
 	def win_len_change(self):
