@@ -4,6 +4,7 @@ import numpy as np
 import scipy.signal as ss
 import pyqtgraph as pg
 from pyqtgraph.Qt import QtCore, QtGui
+import pyqtgraph.exporters
 from template_file_viewer import Ui_Form
 import os, datetime
 
@@ -29,6 +30,7 @@ class QtPlotter:
 		# self.ui_plot.setRange(xRange=[-100, 100], yRange=[0, 2100])
 		self.ui_plot.showGrid(x=True, y=True)
 		self.ui.loadDataBtn.clicked.connect(self.load_data)
+		self.ui.exportImgBtn.clicked.connect(self.export_image)
 		self.ui.windowLenSpin.valueChanged.connect(self.win_len_change)
 		self.ui.winTypeComboBox.currentIndexChanged.connect(self.win_len_change)
 		self.point_num = 0
@@ -49,7 +51,15 @@ class QtPlotter:
 		time_info = 'start time '+start_time.strftime("%d.%m.%y %H:%M:%S")+'; end time '+end_time.strftime("%d.%m.%y %H:%M:%S")
 		self.ui_plot.setTitle(time_info+'; threshold value = '+str(data['threshold'])+'mV')
 		self.ui.windowLenSpin.setValue(1)
-		
+
+	def export_image(self):
+		self.plt.setData(self.data_x, self.raw_data, pen=(0, 0, 0))
+		exporter = pg.exporters.ImageExporter(self.ui_plot.plotItem)
+		exporter.parameters()['background'] = 'w'
+		self.app.processEvents()
+		filename = QtGui.QFileDialog.getSaveFileName(self.win, 'Export image', os.getenv("HOME"))
+		exporter.export(str(filename)+'.png')
+		self.plt.setData(self.data_x, self.raw_data, pen='g')
 
 	def win_len_change(self):
 		if str(self.ui.winTypeComboBox.currentText()) == 'rectangular':

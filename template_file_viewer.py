@@ -63,6 +63,9 @@ class Ui_Form(object):
         self.label_2.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_2.setObjectName(_fromUtf8("label_2"))
         self.gridLayout.addWidget(self.label_2, 2, 1, 1, 1)
+        self.exportImgBtn = QtGui.QPushButton(Form)
+        self.exportImgBtn.setObjectName(_fromUtf8("exportImgBtn"))
+        self.gridLayout.addWidget(self.exportImgBtn, 4, 4, 1, 1)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -75,5 +78,6 @@ class Ui_Form(object):
         self.winTypeComboBox.setItemText(2, _translate("Form", "hann", None))
         self.loadDataBtn.setText(_translate("Form", "Load data", None))
         self.label_2.setText(_translate("Form", "window type", None))
+        self.exportImgBtn.setText(_translate("Form", "Export image", None))
 
 from pyqtgraph import PlotWidget
