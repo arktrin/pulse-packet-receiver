@@ -85,7 +85,7 @@ class QtPlotter:
 		pack_values = [255, 170] + packet + 31*[0]
 		packer = struct.Struct(len(pack_values)*'B')
 		packed_data = packer.pack(*pack_values)
-		sock.sendto(packed_data, ('192.168.2.255', port))
+		sock.sendto(packed_data, ('192.168.1.255', port))
 
 	def save_data(self):
 		start_time_str = datetime.datetime.utcfromtimestamp(float(self.start_time)/1e6).strftime("%d.%m.%y_%H-%M-%S")
