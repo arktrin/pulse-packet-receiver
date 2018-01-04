@@ -63,6 +63,7 @@ class QtPlotter:
 			self.ui.thresholdValueSpin.setValue( round(float(sys.argv[5]),1) )
 			self.threshold_value = round(float(sys.argv[5]),1)
 			self.find_job_num()
+		else: self.job_num = 'no_job_num'
 		self.write_to_DAC()
 		self.timer.timeout.connect(self.update)
 		self.timer.start(0)
@@ -88,8 +89,8 @@ class QtPlotter:
 		sock.sendto(packed_data, ('192.168.1.255', port))
 
 	def save_data(self):
-		start_time_str = datetime.datetime.utcfromtimestamp(float(self.start_time)/1e6).strftime("%d.%m.%y_%H-%M-%S")
-		np.savez('saved_data/'+start_time_str+'.npz', time=self.data_x, threshold=self.threshold_value, count=self.raw_data[16:self.point_num+16])
+		file_name_str = self.job_num+'_'+datetime.datetime.utcfromtimestamp(float(self.start_time)/1e6).strftime("%d.%m.%y_%H-%M-%S")
+		np.savez('saved_data/'+file_name_str+'.npz', time=self.data_x, threshold=self.threshold_value, count=self.raw_data[16:self.point_num+16])
 
 	def find_job_num(self):
 		with open('jobs.txt', 'r') as f:
